@@ -13,8 +13,8 @@ class TaskController extends Controller
     }
     public function index(Request $request)
     {
-        return view('tasks.index');
-        POST /tasks;
+        $tasks = Task::where('user_id', $request->user()->id)->get();
+        return view('tasks.index',['tasks'=> $tasks,]);
     }
     public function store(Request $request)
     {
@@ -22,7 +22,12 @@ class TaskController extends Controller
             'name' => 'required|max:255',
         ]);
 
-        // Create The Task...
+        $request->user()->tasks()->create([
+            'name' => $request->name,
+        ]);
+
+        return redirect('/tasks');
     }
+
 
 }
